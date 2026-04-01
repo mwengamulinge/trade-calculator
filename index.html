@@ -1,243 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:wght@400;500;600&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pattern Scalp | Validator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:wght@400;500;600&display=swap');
 
-:root {
-  --accent-blue: #3E8BFF;
-  --cyan: #44FDFE;
-  --glass-background: rgba(255, 255, 255, 0.92);
-  --valid-accent: #1D9E75;
-  --invalid-accent: #E24B4A;
-  --text-primary: #1C2025;
-  --text-secondary: #5D6470;
-  --muted: #A0A5B0;
-}
+        :root {
+            --accent-blue: #3E8BFF;
+            --glass-background: rgba(255, 255, 255, 0.95);
+            --valid-accent: #1D9E75;
+            --invalid-accent: #E24B4A;
+            --text-primary: #1C2025;
+            --text-secondary: #5D6470;
+            --muted: #A0A5B0;
+            --surface: #FFFFFF;
+            --border: #E1E6EE;
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { 
-  background: #0D1117; 
-  color: var(--text-primary); 
-  font-family: 'Montserrat', sans-serif;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Start at top for scrolling on mobile */
-  min-height: 100vh;
-}
+        body { 
+            background: #0D1117; 
+            color: var(--text-primary); 
+            font-family: 'Montserrat', sans-serif;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
 
-/* RESPONSIVE SCALING ENGINE */
-.wrap { 
-  width: 100%;
-  background: var(--glass-background);
-  border-radius: 28px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
+        /* Responsive Container */
+        .wrap { 
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass-background);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 1.5rem;
+            margin: 10px auto;
+        }
 
-/* 📱 Phone: Maximize space */
-@media (max-width: 480px) {
-  .wrap { max-width: 100%; border-radius: 20px; padding: 1.2rem; }
-  .verdict-main { font-size: 42px !important; } /* Shrink big text so it doesn't wrap ugly */
-  .metrics-row { gap: 4px; }
-  .metric-value { font-size: 14px !important; }
-}
+        @media (max-width: 480px) {
+            body { padding: 5px; }
+            .wrap { padding: 1.2rem; border-radius: 20px; margin: 5px auto; }
+            .verdict-main { font-size: 44px !important; }
+            .metric-value { font-size: 16px !important; }
+        }
 
-/* 📑 Tablet: Centered & Balanced */
-@media (min-width: 481px) and (max-width: 1024px) {
-  .wrap { max-width: 420px; margin-top: 40px; }
-}
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        .logo-top { font-weight: 600; font-size: 18px; color: var(--text-primary); }
+        .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+        .bebas-num { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+        .session-time { font-size: 24px; color: var(--text-primary); }
 
-/* 💻 Desktop: Clean & Sharp */
-@media (min-width: 1025px) {
-  .wrap { max-width: 450px; margin-top: 60px; padding: 2.2rem; }
-  .verdict-main { font-size: 64px !important; }
-}
+        /* Result Card */
+        .result-card {
+            border-radius: 18px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .result-card.valid { border: 2.5px solid var(--valid-accent); background: #F6FFF9; }
+        .result-card.invalid { border: 2.5px solid var(--invalid-accent); background: #FFF9F9; }
 
-/* INTERNAL UI COMPONENTS */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
+        .empty-state { display: flex; align-items: center; gap: 10px; justify-content: center; opacity: 0.6; }
+        .empty-line { flex: 1; height: 1px; background: #B0B8C1; }
+        .empty-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-secondary); }
 
-.logo-top { font-weight: 600; font-size: 1.2rem; color: var(--text-primary); }
-.logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
-.bebas-num { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
-.session-time { font-size: 1.8rem; color: var(--text-primary); }
+        .verdict-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .verdict-main { font-size: 52px; line-height: 0.9; margin-bottom: 1.2rem; }
 
-.result-card {
-  border-radius: 18px;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  background: #FFF;
-  border: 1px solid #E1E6EE;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-.result-card.valid { border: 2.5px solid var(--valid-accent); background: #F4FFF9; }
-.result-card.invalid { border: 2.5px solid var(--invalid-accent); background: #FFF8F8; }
+        .metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .metric { background: rgba(0,0,0,0.03); border-radius: 12px; padding: 10px 4px; text-align: center; border: 1px solid #EDF2F7; }
+        .metric-label { font-size: 7px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+        .metric-value { font-size: 18px; color: var(--text-primary); }
 
-.verdict-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-.verdict-main { font-size: 52px; line-height: 0.9; margin-bottom: 1.2rem; }
+        /* Levels Card */
+        .levels-card { border-radius: 18px; background: var(--surface); padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+        .level-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F0F2F5; }
+        .level-row:last-child { border-bottom: none; }
+        .level-left { display: flex; align-items: center; gap: 10px; }
+        .level-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .level-name { font-size: 11px; color: var(--text-secondary); text-transform: lowercase; }
+        .level-price { font-size: 16px; }
 
-.metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.metric { background: #F8FAFC; border-radius: 12px; padding: 10px 5px; text-align: center; border: 1px solid #EDF2F7; }
-.metric-label { font-size: 8px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-.metric-value { font-size: 18px; color: var(--text-primary); }
+        .rr-row { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 2px dashed #EDF2F7; }
+        .rr-label { font-size: 9px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase; }
+        .rr-value { font-size: 20px; color: var(--accent-blue); }
 
-.levels-card { border-radius: 18px; background: #FFF; padding: 1.25rem; margin-bottom: 1rem; border: 1px solid #E1E6EE; }
-.level-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F0F2F5; }
-.level-name { font-size: 11px; color: var(--text-secondary); }
+        /* Inputs Card */
+        .inputs-card { border-radius: 18px; background: var(--surface); padding: 1.25rem; border: 1px solid var(--border); }
+        .input-field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F0F2F5; }
+        .input-field:last-child { border-bottom: none; }
+        .field-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+        .field-input { 
+            background: #F8FAFC; 
+            border: 1px solid #D1D9E2;
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px; 
+            width: 45%; 
+            text-align: right; 
+            outline: none; 
+            transition: all 0.2s;
+        }
+        .field-input:focus { border-color: var(--accent-blue); background: #FFF; box-shadow: 0 0 0 3px rgba(62, 139, 255, 0.1); }
 
-.rr-row { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 2px dashed #EDF2F7; }
-.rr-value { font-size: 20px; color: var(--accent-blue); }
-
-.inputs-card { border-radius: 18px; background: #FFF; padding: 1.25rem; border: 1px solid #E1E6EE; }
-.input-field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-.field-input { 
-  background: #F8FAFC; 
-  border: 1px solid #D1D9E2;
-  border-radius: 10px;
-  padding: 10px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 16px; 
-  width: 40%; /* Responsive width for input */
-  text-align: right; 
-  outline: none; 
-}
-.field-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(62, 139, 255, 0.1); }
-
-.valid-text { color: var(--valid-accent); }
-.invalid-text { color: var(--invalid-accent); }
-</style>
+        .valid-text { color: var(--valid-accent); }
+        .invalid-text { color: var(--invalid-accent); }
+    </style>
 </head>
 <body>
 
 <div class="wrap">
-  <div class="header">
-    <div>
-      <div class="logo-top">Pattern Scalp</div>
-      <div class="logo-sub">Nasdaq / Gold · Validator</div>
-    </div>
-    <div class="session-time bebas-num">16:15</div>
-  </div>
-
-  <div class="result-card" id="resultCard">
-    <div class="empty-state" id="emptyState">
-      <div class="empty-line"></div>
-      <div class="empty-text">waiting for data</div>
-      <div class="empty-line"></div>
-    </div>
-    <div id="resultContent" style="display:none;">
-      <div class="verdict-tag" id="verdictTag"></div>
-      <div class="verdict-main bebas-num" id="verdictMain"></div>
-      <div class="metrics-row">
-        <div class="metric">
-          <div class="metric-label">Range</div>
-          <div class="metric-value bebas-num" id="mRange"></div>
+    <div class="header">
+        <div>
+            <div class="logo-top">Pattern Scalp</div>
+            <div class="logo-sub">Nasdaq / Gold · Liquidity Calculator</div>
         </div>
-        <div class="metric">
-          <div class="metric-label">Thresh</div>
-          <div class="metric-value bebas-num" id="mThresh"></div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Diff</div>
-          <div class="metric-value bebas-num" id="mExceeded"></div>
-        </div>
-      </div>
+        <div class="session-time bebas-num">16:30</div>
     </div>
-  </div>
 
-  <div class="levels-card" id="levelsCard" style="display:none;">
-    <div class="level-row">
-      <div class="level-left"><div class="level-dot" style="background:var(--invalid-accent)"></div><div class="level-name">stop loss</div></div>
-      <div class="level-price bebas-num invalid-text" id="lvlSL"></div>
+    <div class="result-card" id="resultCard">
+        <div class="empty-state" id="emptyState">
+            <div class="empty-line"></div>
+            <div class="empty-text">awaiting figures</div>
+            <div class="empty-line"></div>
+        </div>
+        <div id="resultContent" style="display:none;">
+            <div class="verdict-tag" id="verdictTag"></div>
+            <div class="verdict-main bebas-num" id="verdictMain"></div>
+            <div class="metrics-row">
+                <div class="metric">
+                    <div class="metric-label">15m range</div>
+                    <div class="metric-value bebas-num" id="mRange"></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">threshold</div>
+                    <div class="metric-value bebas-num" id="mThresh"></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">exceeded by</div>
+                    <div class="metric-value bebas-num" id="mExceeded"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="level-row">
-      <div class="level-left"><div class="level-dot" style="background:#FFD64A"></div><div class="level-name">entry</div></div>
-      <div class="level-price bebas-num" id="lvlEntry">TRIGGER</div>
-    </div>
-    <div class="level-row">
-      <div class="level-left"><div class="level-dot" style="background:var(--valid-accent)"></div><div class="level-name">tp 50%</div></div>
-      <div class="level-price bebas-num valid-text" id="lvlTP1"></div>
-    </div>
-    <div class="rr-row">
-      <div class="rr-label">R:R RATIO</div>
-      <div class="rr-value bebas-num" id="rrVal"></div>
-    </div>
-  </div>
 
-  <div class="inputs-card">
-    <div class="input-field">
-      <div class="field-label">High</div>
-      <input class="field-input" type="number" id="high" placeholder="0.00" oninput="calc()" />
+    <div class="levels-card" id="levelsCard" style="display:none;">
+        <div class="level-row">
+            <div class="level-left"><div class="level-dot" style="background:var(--invalid-accent)"></div><div class="level-name">stop loss</div></div>
+            <div class="level-price bebas-num invalid-text" id="lvlSL"></div>
+        </div>
+        <div class="level-row">
+            <div class="level-left"><div class="level-dot" style="background:#FFD64A"></div><div class="level-name">entry</div></div>
+            <div class="level-price bebas-num" id="lvlEntry">ON TRIGGER</div>
+        </div>
+        <div class="level-row">
+            <div class="level-left"><div class="level-dot" style="background:var(--valid-accent)"></div><div class="level-name">tp 50%</div></div>
+            <div class="level-price bebas-num valid-text" id="lvlTP1"></div>
+        </div>
+        <div class="rr-row">
+            <div class="rr-label">risk : reward ratio</div>
+            <div class="rr-value bebas-num" id="rrVal"></div>
+        </div>
     </div>
-    <div class="input-field">
-      <div class="field-label">Low</div>
-      <input class="field-input" type="number" id="low" placeholder="0.00" oninput="calc()" />
+
+    <div class="inputs-card">
+        <div class="input-field">
+            <div class="field-label">Candle High</div>
+            <input class="field-input" type="number" id="high" placeholder="0.00" step="0.01" oninput="calc()" />
+        </div>
+        <div class="input-field">
+            <div class="field-label">Candle Low</div>
+            <input class="field-input" type="number" id="low" placeholder="0.00" step="0.01" oninput="calc()" />
+        </div>
+        <div class="input-field">
+            <div class="field-label">Daily ATR (D1)</div>
+            <input class="field-input" type="number" id="atr" placeholder="0.00" step="0.01" oninput="calc()" />
+        </div>
     </div>
-    <div class="input-field">
-      <div class="field-label">Daily ATR</div>
-      <input class="field-input" type="number" id="atr" placeholder="0.00" oninput="calc()" />
-    </div>
-  </div>
 </div>
 
 <script>
 function calc() {
-  const high = parseFloat(document.getElementById('high').value);
-  const low = parseFloat(document.getElementById('low').value);
-  const atr = parseFloat(document.getElementById('atr').value);
+    var high = parseFloat(document.getElementById('high').value);
+    var low = parseFloat(document.getElementById('low').value);
+    var atr = parseFloat(document.getElementById('atr').value);
 
-  const card = document.getElementById('resultCard');
-  const empty = document.getElementById('emptyState');
-  const content = document.getElementById('resultContent');
-  const levels = document.getElementById('levelsCard');
+    var card = document.getElementById('resultCard');
+    var empty = document.getElementById('emptyState');
+    var content = document.getElementById('resultContent');
+    var levels = document.getElementById('levelsCard');
 
-  if (isNaN(high) || isNaN(low) || isNaN(atr) || high <= low) {
-    card.className = 'result-card';
-    empty.style.display = 'flex';
-    content.style.display = 'none';
-    levels.style.display = 'none';
-    return;
-  }
+    if (isNaN(high) || isNaN(low) || isNaN(atr) || high <= low || atr <= 0) {
+        card.className = 'result-card';
+        empty.style.display = 'flex';
+        content.style.display = 'none';
+        levels.style.display = 'none';
+        return;
+    }
 
-  const range = high - low;
-  const threshold = atr * 0.20;
-  const diff = range - threshold;
-  const isValid = range >= threshold;
+    var range = high - low;
+    var threshold = atr * 0.20;
+    var diff = range - threshold;
+    var isValid = range >= threshold;
 
-  empty.style.display = 'none';
-  content.style.display = 'block';
-  levels.style.display = 'block';
+    empty.style.display = 'none';
+    content.style.display = 'block';
+    levels.style.display = 'block';
 
-  card.className = 'result-card ' + (isValid ? 'valid' : 'invalid');
-  
-  const tag = document.getElementById('verdictTag');
-  const main = document.getElementById('verdictMain');
-  
-  tag.textContent = isValid ? 'Manipulation Confirmed' : 'Threshold Not Met';
-  tag.className = 'verdict-tag ' + (isValid ? 'valid-text' : 'invalid-text');
-  
-  main.textContent = isValid ? 'VALID SETUP' : 'NO TRADE';
-  main.className = 'verdict-main bebas-num ' + (isValid ? 'valid-text' : 'invalid-text');
+    card.className = 'result-card ' + (isValid ? 'valid' : 'invalid');
+    
+    var tag = document.getElementById('verdictTag');
+    var main = document.getElementById('verdictMain');
+    
+    tag.textContent = isValid ? 'manipulation confirmed' : 'threshold not met';
+    tag.className = 'verdict-tag ' + (isValid ? 'valid-text' : 'invalid-text');
+    
+    main.textContent = isValid ? 'VALID SETUP' : 'NO TRADE';
+    main.className = 'verdict-main bebas-num ' + (isValid ? 'valid-text' : 'invalid-text');
 
-  document.getElementById('mRange').textContent = range.toFixed(2);
-  document.getElementById('mThresh').textContent = threshold.toFixed(2);
-  document.getElementById('mExceeded').textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2);
-  document.getElementById('mExceeded').className = 'metric-value bebas-num ' + (diff >= 0 ? 'valid-text' : 'invalid-text');
+    document.getElementById('mRange').textContent = range.toFixed(2);
+    document.getElementById('mThresh').textContent = threshold.toFixed(2);
+    
+    var exc = document.getElementById('mExceeded');
+    exc.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2);
+    exc.className = 'metric-value bebas-num ' + (diff >= 0 ? 'valid-text' : 'invalid-text');
 
-  const slBuffer = range * 0.1;
-  document.getElementById('lvlSL').textContent = (high + slBuffer).toFixed(2);
-  document.getElementById('lvlTP1').textContent = (low + (range * 0.5)).toFixed(2);
-  document.getElementById('rrVal').textContent = (range * 0.5 / (range * 0.1 + range)).toFixed(1) + ' : 1';
+    var slBuffer = range * 0.1;
+    document.getElementById('lvlSL').textContent = (high + slBuffer).toFixed(2);
+    document.getElementById('lvlTP1').textContent = (low + (range * 0.5)).toFixed(2);
+    
+    // Original R:R logic restored
+    var rrValue = (range * 0.5 / (range + slBuffer)).toFixed(1);
+    document.getElementById('rrVal').textContent = rrValue + ' : 1';
 }
 </script>
 
