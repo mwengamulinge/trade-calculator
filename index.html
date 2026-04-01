@@ -7,8 +7,7 @@
 :root {
   --accent-blue: #3E8BFF;
   --cyan: #44FDFE;
-  --soft-white: #FCFDFF;
-  --glass-background: rgba(255, 255, 255, 0.85); /* Increased opacity for better visibility */
+  --glass-background: rgba(255, 255, 255, 0.92);
   --valid-accent: #1D9E75;
   --invalid-accent: #E24B4A;
   --text-primary: #1C2025;
@@ -22,20 +21,45 @@ body {
   background: #0D1117; 
   color: var(--text-primary); 
   font-family: 'Montserrat', sans-serif;
-  padding: 20px 10px; /* Removed 100vh centering to prevent "pushing" off screen */
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Start at top for scrolling on mobile */
+  min-height: 100vh;
 }
 
+/* RESPONSIVE SCALING ENGINE */
 .wrap { 
-  max-width: 380px; 
-  margin: 0 auto;
-  padding: 2rem 1.5rem; 
+  width: 100%;
   background: var(--glass-background);
-  border-radius: 32px;
+  border-radius: 28px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
 }
 
+/* 📱 Phone: Maximize space */
+@media (max-width: 480px) {
+  .wrap { max-width: 100%; border-radius: 20px; padding: 1.2rem; }
+  .verdict-main { font-size: 42px !important; } /* Shrink big text so it doesn't wrap ugly */
+  .metrics-row { gap: 4px; }
+  .metric-value { font-size: 14px !important; }
+}
+
+/* 📑 Tablet: Centered & Balanced */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .wrap { max-width: 420px; margin-top: 40px; }
+}
+
+/* 💻 Desktop: Clean & Sharp */
+@media (min-width: 1025px) {
+  .wrap { max-width: 450px; margin-top: 60px; padding: 2.2rem; }
+  .verdict-main { font-size: 64px !important; }
+}
+
+/* INTERNAL UI COMPONENTS */
 .header {
   display: flex;
   align-items: center;
@@ -43,64 +67,52 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.logo-top { font-weight: 600; font-size: 18px; color: var(--text-primary); }
-.logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+.logo-top { font-weight: 600; font-size: 1.2rem; color: var(--text-primary); }
+.logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
 .bebas-num { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
-.session-time { font-size: 24px; color: var(--text-primary); }
+.session-time { font-size: 1.8rem; color: var(--text-primary); }
 
-/* RESULT CARD */
 .result-card {
   border-radius: 18px;
   padding: 1.25rem;
   margin-bottom: 1rem;
   background: #FFF;
   border: 1px solid #E1E6EE;
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
-.result-card.valid { border: 2px solid var(--valid-accent); background: #F0FFF9; }
-.result-card.invalid { border: 2px solid var(--invalid-accent); background: #FFF5F5; }
-
-.empty-state { display: flex; align-items: center; gap: 10px; justify-content: center; opacity: 0.5; }
-.empty-line { flex: 1; height: 1px; background: #B0B8C1; }
-.empty-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-secondary); }
+.result-card.valid { border: 2.5px solid var(--valid-accent); background: #F4FFF9; }
+.result-card.invalid { border: 2.5px solid var(--invalid-accent); background: #FFF8F8; }
 
 .verdict-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-.verdict-main { font-size: 48px; line-height: 1; margin-bottom: 1rem; }
+.verdict-main { font-size: 52px; line-height: 0.9; margin-bottom: 1.2rem; }
 
-.metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-.metric { background: rgba(0,0,0,0.03); border-radius: 10px; padding: 10px 8px; text-align: center; }
-.metric-label { font-size: 7px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-.metric-value { font-size: 16px; }
+.metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.metric { background: #F8FAFC; border-radius: 12px; padding: 10px 5px; text-align: center; border: 1px solid #EDF2F7; }
+.metric-label { font-size: 8px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+.metric-value { font-size: 18px; color: var(--text-primary); }
 
-/* LEVELS CARD */
 .levels-card { border-radius: 18px; background: #FFF; padding: 1.25rem; margin-bottom: 1rem; border: 1px solid #E1E6EE; }
-.level-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #F0F2F5; }
-.level-left { display: flex; align-items: center; gap: 8px; }
-.level-dot { width: 6px; height: 6px; border-radius: 50%; }
-.level-name { font-size: 10px; color: var(--text-secondary); text-transform: lowercase; }
-.level-price { font-size: 15px; }
+.level-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F0F2F5; }
+.level-name { font-size: 11px; color: var(--text-secondary); }
 
-.rr-row { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 2px dashed #E1E6EE; }
-.rr-label { font-size: 9px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); }
-.rr-value { font-size: 18px; color: var(--accent-blue); }
+.rr-row { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 2px dashed #EDF2F7; }
+.rr-value { font-size: 20px; color: var(--accent-blue); }
 
-/* INPUTS CARD */
 .inputs-card { border-radius: 18px; background: #FFF; padding: 1.25rem; border: 1px solid #E1E6EE; }
-.input-field { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
-.field-label { font-size: 11px; color: var(--text-secondary); }
+.input-field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
 .field-input { 
   background: #F8FAFC; 
-  border: 1px solid #E1E6EE;
-  border-radius: 8px;
-  padding: 8px 12px;
+  border: 1px solid #D1D9E2;
+  border-radius: 10px;
+  padding: 10px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 15px; 
-  width: 120px; 
+  font-size: 16px; 
+  width: 40%; /* Responsive width for input */
   text-align: right; 
   outline: none; 
 }
-.field-input:focus { border-color: var(--accent-blue); background: #FFF; }
+.field-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(62, 139, 255, 0.1); }
 
 .valid-text { color: var(--valid-accent); }
 .invalid-text { color: var(--invalid-accent); }
