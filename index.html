@@ -1,0 +1,248 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --gold-dim: #7A6030;
+  --valid-accent: #1D9E75;
+  --valid-text: #5DCAA5;
+  --invalid-accent: #E24B4A;
+  --invalid-text: #F09595;
+  --surface2: #1E1C1A;
+  --surface3: #252320;
+  --border: rgba(201,168,76,0.12);
+  --text: #EDE8DF;
+  --muted: #706C65;
+}
+
+body { background: transparent; color: var(--text); }
+.wrap { max-width: 400px; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.logo-top { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.06em; color: var(--gold); line-height: 1; }
+.logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 300; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+.session-time { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--text); letter-spacing: 0.04em; line-height: 1; text-align: right; }
+.session-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 300; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; text-align: right; }
+
+.result-card {
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border: 0.5px solid var(--border);
+  background: var(--surface2);
+  transition: background 0.35s, border-color 0.35s;
+  position: relative;
+  overflow: hidden;
+}
+.result-card.valid { background: #071410; border-color: var(--valid-accent); }
+.result-card.invalid { background: #150808; border-color: var(--invalid-accent); }
+.result-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--gold-dim); opacity: 0.2; transition: background 0.35s, opacity 0.35s; }
+.result-card.valid::after { background: var(--valid-accent); opacity: 0.5; }
+.result-card.invalid::after { background: var(--invalid-accent); opacity: 0.5; }
+
+.empty-state { display: flex; align-items: center; gap: 14px; padding: 0.5rem 0; }
+.empty-line { flex: 1; height: 0.5px; background: var(--border); }
+.empty-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 300; color: var(--muted); letter-spacing: 0.1em; white-space: nowrap; }
+
+.verdict-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; transition: color 0.3s; }
+.verdict-tag.valid { color: var(--valid-text); }
+.verdict-tag.invalid { color: var(--invalid-text); }
+
+.verdict-main { font-family: 'Bebas Neue', sans-serif; font-size: 56px; letter-spacing: 0.04em; line-height: 1; color: var(--text); margin-bottom: 1.1rem; transition: color 0.3s; }
+.verdict-main.valid { color: var(--valid-text); }
+.verdict-main.invalid { color: var(--invalid-text); }
+
+.metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.metric { background: rgba(0,0,0,0.25); border-radius: 8px; padding: 9px 10px 8px; border: 0.5px solid rgba(255,255,255,0.04); }
+.metric-label { font-family: 'IBM Plex Mono', monospace; font-size: 8px; font-weight: 300; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+.metric-value { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.04em; color: var(--text); }
+.metric-value.gold { color: var(--gold); }
+.metric-value.green { color: var(--valid-text); }
+.metric-value.red { color: var(--invalid-text); }
+
+.levels-card { border-radius: 14px; border: 0.5px solid var(--border); background: var(--surface2); padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+.card-title { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem; }
+.level-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
+.level-row:last-child { border-bottom: none; }
+.level-left { display: flex; align-items: center; gap: 10px; }
+.level-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dot-sl { background: var(--invalid-accent); }
+.dot-entry { background: var(--gold); }
+.dot-tp1 { background: #5DCAA5; }
+.dot-tp2 { background: #1D9E75; }
+.level-name { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 300; color: var(--muted); }
+.level-price { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.04em; color: var(--text); }
+.level-price.sl { color: var(--invalid-text); }
+.level-price.entry { color: var(--gold-light); }
+.level-price.tp1 { color: var(--valid-text); }
+.level-price.tp2 { color: #1D9E75; }
+.rr-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 0.5px solid var(--border); }
+.rr-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 300; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+.rr-value { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--gold); letter-spacing: 0.06em; }
+
+.inputs-card { border-radius: 14px; border: 0.5px solid var(--border); background: var(--surface2); padding: 1.1rem 1.25rem; }
+.input-field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
+.input-field:last-child { border-bottom: none; }
+.field-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 300; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.field-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold-dim); }
+.field-input { background: var(--surface3); border: 0.5px solid rgba(201,168,76,0.15); border-radius: 8px; padding: 8px 12px; color: var(--text); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.05em; width: 130px; text-align: right; outline: none; transition: border-color 0.2s; -moz-appearance: textfield; }
+.field-input::-webkit-outer-spin-button, .field-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.field-input:focus { border-color: var(--gold); }
+.field-input::placeholder { color: var(--muted); font-size: 13px; font-family: 'IBM Plex Mono', monospace; font-weight: 300; }
+</style>
+
+<div class="wrap">
+  <div class="header">
+    <div>
+      <div class="logo-top">Pattern Scalp</div>
+      <div class="logo-sub">XAU / USD · Liquidity Calculator</div>
+    </div>
+    <div>
+      <div class="session-time">11:00</div>
+      <div class="session-label">London · EAT</div>
+    </div>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-line"></div>
+      <div class="empty-text">awaiting values</div>
+      <div class="empty-line"></div>
+    </div>
+    <div id="resultContent" style="display:none;">
+      <div class="verdict-tag" id="verdictTag">—</div>
+      <div class="verdict-main" id="verdictMain">—</div>
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="metric-label">15m range</div>
+          <div class="metric-value gold" id="mRange">—</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">threshold</div>
+          <div class="metric-value" id="mThresh">—</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">exceeded by</div>
+          <div class="metric-value" id="mExceeded">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="levels-card" id="levelsCard" style="display:none;">
+    <div class="card-title">Price levels</div>
+    <div class="level-row">
+      <div class="level-left"><div class="level-dot dot-sl"></div><div class="level-name">stop loss</div></div>
+      <div class="level-price sl" id="lvlSL">—</div>
+    </div>
+    <div class="level-row">
+      <div class="level-left"><div class="level-dot dot-entry"></div><div class="level-name">entry trigger</div></div>
+      <div class="level-price entry" id="lvlEntry">—</div>
+    </div>
+    <div class="level-row">
+      <div class="level-left"><div class="level-dot dot-tp1"></div><div class="level-name">TP1 · 50% range</div></div>
+      <div class="level-price tp1" id="lvlTP1">—</div>
+    </div>
+    <div class="level-row">
+      <div class="level-left"><div class="level-dot dot-tp2"></div><div class="level-name">TP2 · 100% range</div></div>
+      <div class="level-price tp2" id="lvlTP2">—</div>
+    </div>
+    <div class="rr-row">
+      <div class="rr-label">risk · reward ratio</div>
+      <div class="rr-value" id="rrVal">—</div>
+    </div>
+  </div>
+
+  <div class="inputs-card">
+    <div class="card-title">Opening candle · D1 ATR</div>
+    <div class="input-field">
+      <div class="field-label"><div class="field-dot"></div>candle high</div>
+      <input class="field-input" type="number" id="high" placeholder="3025.50" step="0.01" oninput="calc()" />
+    </div>
+    <div class="input-field">
+      <div class="field-label"><div class="field-dot"></div>candle low</div>
+      <input class="field-input" type="number" id="low" placeholder="3018.20" step="0.01" oninput="calc()" />
+    </div>
+    <div class="input-field">
+      <div class="field-label"><div class="field-dot"></div>daily ATR</div>
+      <input class="field-input" type="number" id="atr" placeholder="28.40" step="0.01" oninput="calc()" />
+    </div>
+  </div>
+</div>
+
+<script>
+function calc() {
+  var high = parseFloat(document.getElementById('high').value);
+  var low = parseFloat(document.getElementById('low').value);
+  var atr = parseFloat(document.getElementById('atr').value);
+
+  var card = document.getElementById('resultCard');
+  var empty = document.getElementById('emptyState');
+  var content = document.getElementById('resultContent');
+  var levels = document.getElementById('levelsCard');
+
+  if (isNaN(high) || isNaN(low) || isNaN(atr) || high <= low || atr <= 0) {
+    card.className = 'result-card';
+    empty.style.display = 'flex';
+    content.style.display = 'none';
+    levels.style.display = 'none';
+    return;
+  }
+
+  var range = high - low;
+  var threshold = atr * 0.20;
+  var diff = range - threshold;
+  var isValid = range >= threshold;
+
+  empty.style.display = 'none';
+  content.style.display = 'block';
+  levels.style.display = 'block';
+
+  card.className = 'result-card ' + (isValid ? 'valid' : 'invalid');
+
+  var tag = document.getElementById('verdictTag');
+  var main = document.getElementById('verdictMain');
+
+  tag.className = 'verdict-tag ' + (isValid ? 'valid' : 'invalid');
+  main.className = 'verdict-main ' + (isValid ? 'valid' : 'invalid');
+
+  tag.textContent = isValid ? 'manipulation confirmed' : 'threshold not met';
+  main.textContent = isValid ? 'Valid Setup' : 'No Trade';
+
+  document.getElementById('mRange').textContent = '$' + range.toFixed(2);
+  document.getElementById('mThresh').textContent = '$' + threshold.toFixed(2);
+
+  var exc = document.getElementById('mExceeded');
+  exc.textContent = (diff >= 0 ? '+' : '') + '$' + diff.toFixed(2);
+  exc.className = 'metric-value ' + (diff >= 0 ? 'green' : 'red');
+
+  var slBuffer = range * 0.1;
+  var rr = (range * 0.5 / (range + slBuffer)).toFixed(1);
+
+  if (isValid) {
+    document.getElementById('lvlSL').textContent = (low - slBuffer).toFixed(2) + ' / ' + (high + slBuffer).toFixed(2);
+    document.getElementById('lvlEntry').textContent = 'on 5m trigger break';
+    document.getElementById('lvlTP1').textContent = '$' + (range * 0.5).toFixed(2) + ' from entry';
+    document.getElementById('lvlTP2').textContent = '$' + range.toFixed(2) + ' from entry';
+    document.getElementById('rrVal').textContent = rr + ' : 1';
+  } else {
+    document.getElementById('lvlSL').textContent = '—';
+    document.getElementById('lvlEntry').textContent = '—';
+    document.getElementById('lvlTP1').textContent = '—';
+    document.getElementById('lvlTP2').textContent = '—';
+    document.getElementById('rrVal').textContent = '—';
+  }
+}
+</script>
